@@ -25,26 +25,31 @@ class ChatRepository implements IChatRepository {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     final chatMessages = <ChatMessage>[
       ChatMessage(
+        chatRoomId: '1',
         userName: 'TestUser',
         message: 'message 1',
         utcTime: DateTime.now().toUtc(),
       ),
       ChatMessage(
+        chatRoomId: '1',
         userName: 'TestUser',
         message: 'message 2',
         utcTime: DateTime.now().toUtc(),
       ),
       ChatMessage(
+        chatRoomId: '1',
         userName: 'TestUser',
         message: 'message 3',
         utcTime: DateTime.now().toUtc(),
       ),
       ChatMessage(
+        chatRoomId: '1',
         userName: 'TestUser',
         message: 'message 4',
         utcTime: DateTime.now().toUtc(),
       ),
       ChatMessage(
+        chatRoomId: '1',
         userName: 'TestUser',
         message: 'message 5',
         utcTime: DateTime.now().toUtc(),
@@ -67,6 +72,7 @@ class ChatRepository implements IChatRepository {
       }
       _chatMessageSc.add(
         ChatMessage(
+          chatRoomId: '1',
           userName: 'TestUser',
           message: message,
           utcTime: DateTime.now().toUtc(),

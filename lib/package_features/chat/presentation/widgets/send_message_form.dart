@@ -11,35 +11,45 @@ class SendMessageForm extends StatelessWidget {
   final controller = TextEditingController();
 
   @override
-  Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-            child: SizedBox(
-              width: 200,
-              child: TextField(
-                controller: controller,
-                maxLines: null, //wrap text
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.orange),
+                ),
+                child: SizedBox(
+                  width: 200,
+                  child: TextField(
+                    controller: controller,
+                    maxLines: null, //wrap text
+                  ),
+                ),
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-            width: 80,
-            height: 40,
-            child: TextButton(
-              onPressed: () {
-                chatService.postMessage(controller.text);
-                controller.clear();
-              },
-              child: const Icon(
-                Icons.send_rounded,
-                size: 20,
-                color: Colors.green,
+            Container(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+              width: 80,
+              height: 40,
+              child: TextButton(
+                onPressed: () {
+                  chatService.postMessage(controller.text);
+                  controller.clear();
+                },
+                child: const Icon(
+                  Icons.send_rounded,
+                  size: 20,
+                  color: Colors.green,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }

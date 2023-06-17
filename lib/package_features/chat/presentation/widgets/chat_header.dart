@@ -35,17 +35,22 @@ class _ChatHeaderState extends State<ChatHeader> {
   }
 
   @override
-  Widget build(BuildContext context) => const Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(width: 6),
-          Padding(
-            padding: EdgeInsets.only(top: 12),
-            child: Text('Select chat here'),
-          ),
-          Icon(Icons.close),
-        ],
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+        ),
+        child: const Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(width: 6),
+            Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: Text('Select chat here'),
+            ),
+            Icon(Icons.close),
+          ],
+        ),
       );
 }

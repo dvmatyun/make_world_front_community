@@ -3,7 +3,7 @@ import 'dart:convert';
 
 // Package imports:
 import 'package:json_annotation/json_annotation.dart';
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_message.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_message.dart';
 
 part 'chat_message.g.dart';
 

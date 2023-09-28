@@ -4,7 +4,7 @@ import 'dart:convert';
 // Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_room.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_room.dart';
 
 import 'chat_message.dart';
 

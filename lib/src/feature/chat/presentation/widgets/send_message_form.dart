@@ -1,6 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:make_world_front_community/package_features/chat/domain/service/chat_service.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/service/chat_service.dart';
 
 @immutable
 class SendMessageForm extends StatelessWidget {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:make_world_front_community/package_features/chat/data/models/chat_message.dart';
-import 'package:make_world_front_community/package_features/chat/data/models/chat_room_model.dart';
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_message.dart';
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_room.dart';
-import 'package:make_world_front_community/package_features/chat/domain/repository/chat_repository.dart';
+import 'package:make_world_front_community/src/feature/chat/data/models/chat_message.dart';
+import 'package:make_world_front_community/src/feature/chat/data/models/chat_room_model.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_message.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_room.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/repository/chat_repository.dart';
 
 class ChatRepository implements IChatRepository {
   @override

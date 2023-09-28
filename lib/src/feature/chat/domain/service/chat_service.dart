@@ -1,5 +1,5 @@
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_message.dart';
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_room.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_message.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_room.dart';
 
 abstract class IChatService {
   Stream<List<IChatRoom>> get chatRoomStream;

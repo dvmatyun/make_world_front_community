@@ -1,10 +1,10 @@
 // Dart imports:
 import 'dart:async';
 
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_message.dart';
-import 'package:make_world_front_community/package_features/chat/domain/entities/chat_room.dart';
-import 'package:make_world_front_community/package_features/chat/domain/repository/chat_repository.dart';
-import 'package:make_world_front_community/package_features/chat/domain/service/chat_service.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_message.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/entities/chat_room.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/repository/chat_repository.dart';
+import 'package:make_world_front_community/src/feature/chat/domain/service/chat_service.dart';
 
 class ChatServiceImpl implements IChatService {
   final IChatRepository _chatRepository;

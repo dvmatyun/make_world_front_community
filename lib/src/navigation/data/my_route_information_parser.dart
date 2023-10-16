@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
+import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
+
+class MirrorInfoPraser extends RouteInformationParser<RouteInformation> {
+  @override
+  Future<RouteInformation> parseRouteInformation(RouteInformation routeInformation) async {
+    return routeInformation;
+  }
+
+  @override
+  RouteInformation? restoreRouteInformation(RouteInformation configuration) {
+    return configuration;
+  }
+}
 
 class MyRouteInformationParser extends RouteInformationParser<AppConfigAim> {
   @override
@@ -14,6 +27,7 @@ class MyRouteInformationParser extends RouteInformationParser<AppConfigAim> {
       switch (uri.pathSegments[0]) {
         case HomePage.routeName:
         case LoginPage.routeName:
+        case ShaderPage.routeName:
           return AppConfigAim.custom(uri.pathSegments[0]);
         default:
           break;
@@ -49,9 +63,9 @@ class MyRouteInformationParser extends RouteInformationParser<AppConfigAim> {
   @override
   RouteInformation? restoreRouteInformation(AppConfigAim configuration) {
     print(' > restoreRouteInformation : ${configuration.uri.path}');
-    if (configuration.uri.path == '/') {
+    if (configuration.uri.path.split('').every((e) => e == '/' || e == ' ')) {
       print(' > restoreRouteInformation : null result');
-      return null;
+      return const RouteInformation(location: '/');
     }
     print(' > restoreRouteInformation : ${configuration.uri.path} result');
     return RouteInformation(location: configuration.uri.path);

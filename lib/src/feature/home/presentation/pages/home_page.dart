@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/design_elements/page/scaffold_aim.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
+import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
 
@@ -35,6 +36,14 @@ class _HomePageState extends State<HomePage> {
               });
             },
             child: const Text('Go to login'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Router.navigate(context, () {
+                MyRouterDelegate.of(context).setNewRoutePath(AppConfigAim.custom(ShaderPage.routeName));
+              });
+            },
+            child: const Text('Go to shader'),
           ),
         ],
       ),

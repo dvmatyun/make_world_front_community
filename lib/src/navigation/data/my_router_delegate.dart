@@ -2,9 +2,69 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
+import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
+import 'package:make_world_front_community/src/feature/splash/domain/services/app_base_service.dart';
+import 'package:make_world_front_community/src/feature/splash/presentation/pages/splash_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 
+class MirrorRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNotifier {
+  RouteInformation? latestRoute;
+  Iterable<Page<dynamic>> get _pagesIterable sync* {
+    yield const MaterialPage(
+      key: ValueKey('LoginPage'),
+      name: 'LoginPage',
+      child: SplashPage(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('BookRouterDelegate building...');
+    return Navigator(
+      observers: const [],
+      pages: _pagesIterable.toList(),
+      reportsRouteUpdateToEngine: false,
+      onGenerateInitialRoutes: (ns, s) {
+        print(' > onGenerateInitialRoutes: $s');
+        return [];
+      },
+      onPopPage: (route, result) {
+        print(' > on pop page: route=$route, result=$result');
+        return true;
+      },
+    );
+  }
+
+  @override
+  Future<void> setInitialRoutePath(RouteInformation configuration) {
+    print(' > MirrorRouterDelegate setInitialRoutePath ${configuration.location}');
+    latestRoute = configuration;
+    return super.setInitialRoutePath(configuration);
+  }
+
+  @override
+  Future<bool> popRoute() {
+    return SynchronousFuture<bool>(false);
+  }
+
+  @override
+  Future<void> setNewRoutePath(RouteInformation configuration) async {
+    print(' > MirrorRouterDelegate setRestoredRoutePath ${configuration.location}');
+  }
+}
+
 class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier {
+  final IAppBaseService _baseService;
+  MyRouterDelegate(IAppBaseService baseService) : _baseService = baseService {
+    _init();
+  }
+
+  Future<void> _init() async {
+    await _baseService.init();
+    currentState = currentState.copyWith(internalChange: true);
+    notifyListeners();
+  }
+
   static MyRouterDelegate of(BuildContext context) {
     final delegate = Router.of(context).routerDelegate;
     assert(delegate is MyRouterDelegate, 'Delegate type must match');
@@ -23,6 +83,14 @@ class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier 
   }
 
   Iterable<Page<dynamic>> get _pagesIterable sync* {
+    if (!_baseService.isLoaded) {
+      yield const MaterialPage(
+        key: ValueKey('SplashPage'),
+        name: 'SplashPage',
+        child: SplashPage(),
+      );
+      return;
+    }
     if (currentState.uri.pathSegments.isEmpty) {
       yield const MaterialPage(
         key: ValueKey('LoginPage'),
@@ -39,6 +107,12 @@ class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier 
           name: 'HomePage',
           child: HomePage(),
         );
+      case ShaderPage.routeName:
+        yield const MaterialPage(
+          key: ValueKey('ShaderPage'),
+          name: 'ShaderPage',
+          child: ShaderPage(),
+        );
       case LoginPage.routeName:
       default:
         yield const MaterialPage(
@@ -47,34 +121,6 @@ class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier 
           child: LoginPage(),
         );
     }
-
-    /*
-    List<Page<dynamic>> pages = [];
-    pages.add(
-      MaterialPage(
-        key: ValueKey('BooksListPage'),
-        child: BooksListScreen(
-          books: books,
-        ),
-      ),
-    );
-    if (currentState.uri.pathSegments[0] == AppConfig.book().uri.pathSegments[0]) {
-      if (currentState.id != null)
-        pages.add(
-          MaterialPage(
-              key: ValueKey('BookListPageId' + currentState.id.toString()),
-              child: BookDetailsScreen(book: books[currentState.id ?? 0])),
-        );
-    } else if (currentState.uri.pathSegments[0] == AppConfig.user().uri.pathSegments[0]) {
-      pages.add(MaterialPage(
-          key: ValueKey('LoginScreen'),
-          child: UserScreen(
-            refresh: _notifyListeners,
-          )));
-    }
-    if (currentState.isUnknown) pages.add(MaterialPage(key: ValueKey('UnknownPage'), child: UnknownScreen()));
-    return pages;
-    */
   }
 
   @override

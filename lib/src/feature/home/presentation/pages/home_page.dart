@@ -4,31 +4,34 @@ import 'package:make_world_front_community/src/feature/home/presentation/pages/l
 import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation_pages/presentation/logic_page_aim.dart';
 
 /// {@template login_page}
 /// HomePage widget
 /// {@endtemplate}
-class HomePage extends StatefulWidget {
+class HomePage extends PageArgumentSyncWidget {
   /// {@macro login_page}
-  const HomePage({required this.args, super.key});
+  const HomePage({required this.navigatorState, super.key});
 
-  final IAppConfigAim<Map<String, String?>?> args;
+  @override
+  final IAppConfigAim<Map<String, String?>?> navigatorState;
+
   static const String routeName = '/home';
+  @override
+  String get route => routeName;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 /// State for widget HomePage
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends PageArgumentSyncState<HomePage> {
   int counter = 0;
   static const _counterKey = 'counter';
 
   @override
-  void initState() {
-    super.initState();
-    //args
-    final counterStr = widget.args.args?[_counterKey] ?? '0';
+  void syncArgumentToState(Map<String, String?>? args) {
+    final counterStr = args?[_counterKey] ?? '0';
     counter = int.tryParse(counterStr) ?? 0;
   }
 

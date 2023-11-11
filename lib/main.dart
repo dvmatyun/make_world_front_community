@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   late final exampleRoutes = NavigationContainerAim();
 
   late final navConfig = MaterialAppNavigatorConfigAim<Map<String, String?>?>(
-    customRouteHandler: const CustomRouteHandlerBaseAim(),
+    customRouteHandler: CustomRouteHandlerBaseAim(),
     routerDelegate: RouterDelegateAim(
       routesAim: exampleRoutes.routesAim,
       fallbackRoute: exampleRoutes.fallbackRoute,

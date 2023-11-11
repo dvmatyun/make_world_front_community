@@ -4,6 +4,7 @@ import 'package:make_world_front_community/src/feature/chat/domain/service/chat_
 import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation_pages/domain/navigator_aim.dart';
 
 import '../widgets/chat_body.dart';
 import '../widgets/chat_header.dart';
@@ -24,10 +25,7 @@ class ChatScreen extends StatelessWidget {
           const Text('Go home here'),
           TextButton(
             onPressed: () {
-              Router.navigate(context, () {
-                RouterDelegateAim.of(context).setNewRoutePath(const AppConfigMapAim.route(HomePage.routeName));
-                //(Router.of(context).routerDelegate as MyRouterDelegate).handleBookTapped(book);
-              });
+              NavigatorAim.of(context).navigate(context, const AppConfigMapAim.route(HomePage.routeName));
             },
             child: const Text('Go to home'),
           ),

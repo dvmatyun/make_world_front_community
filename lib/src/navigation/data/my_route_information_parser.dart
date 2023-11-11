@@ -27,7 +27,7 @@ class RouteInformationParserAim extends IRouteInformationParserAim<Map<String, S
     final mapArgsQuery = uri?.queryParametersAll.map((key, value) => MapEntry(key, value.join(',')));
 
     print(' > parser parse route: $route / args: $mapArgsQuery');
-    return AppConfigMapAim(null, route, args: mapArgsQuery);
+    return AppConfigMapAim(route, args: mapArgsQuery);
   }
 
   @override

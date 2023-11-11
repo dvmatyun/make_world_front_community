@@ -1,20 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/design_elements/page/page_wrapper_aim.dart';
-import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/page_aim.dart';
 
 typedef RouteBuilderAim<T> = IPageAim Function(IAppConfigAim<T> args);
 
-abstract class IRouterDelegateAim<T> extends RouterDelegate<IAppConfigAim<T>> {
-  Map<String, RouteBuilderAim<T>> get routesAim;
+abstract class IRouterDelegateAim<T> extends RouterDelegate<IAppConfigAim<Object?>> {
+  Map<String, RouteBuilderAim<T?>> get routesAim;
 
   /// This page is shown if route is unknown
   RouteBuilderAim<T?> get fallbackRoute;
 
   /// This page is shown when app is loading
   RouteBuilderAim<T?> get splashScreenRoute;
+
+  /// used for "untyped" navigator
+  IAppConfigAim<T?> typeConfig(IAppConfigAim<Object?> source);
+
+  IAppConfigAim<T?> get typedConfig;
 }
 
 //Map<String, String?>
@@ -32,13 +36,18 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>?> with C
   @override
   final RouteBuilderAim<Map<String, String?>?> splashScreenRoute;
 
+  /*
   static RouterDelegateAim of(BuildContext context) {
     final delegate = Router.of(context).routerDelegate;
     assert(delegate is RouterDelegateAim, 'Delegate type must match');
     return delegate as RouterDelegateAim;
   }
+  */
 
-  IAppConfigAim<Map<String, String?>?> currentState = const AppConfigMapAim.route(LoginPage.routeName);
+  IAppConfigAim<Map<String, String?>?> currentState = const AppConfigMapAim.route('/');
+  @override
+  IAppConfigAim<Map<String, String?>?> get typedConfig => currentState;
+
   final navigatorObserver = NavigatorObserver();
 
   IAppConfigAim<Map<String, String?>>? previousState;
@@ -64,46 +73,6 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>?> with C
         child: childPage.child,
       ),
     );
-    /*
-    if (!_baseService.isLoaded) {
-      yield const MaterialPage(
-        key: ValueKey('SplashPage'),
-        name: 'SplashPage',
-        child: SplashPage(),
-      );
-      return;
-    }
-    if (currentState.uri.pathSegments.isEmpty) {
-      yield const MaterialPage(
-        key: ValueKey('LoginPage'),
-        name: 'LoginPage',
-        child: LoginPage(),
-      );
-      return;
-    }
-
-    switch (currentState.uri.pathSegments[0]) {
-      case HomePage.routeName:
-        yield const MaterialPage(
-          key: ValueKey('HomePage'),
-          name: 'HomePage',
-          child: HomePage(),
-        );
-      case ShaderPage.routeName:
-        yield const MaterialPage(
-          key: ValueKey('ShaderPage'),
-          name: 'ShaderPage',
-          child: ShaderPage(),
-        );
-      case LoginPage.routeName:
-      default:
-        yield const MaterialPage(
-          key: ValueKey('LoginPage'),
-          name: 'LoginPage',
-          child: LoginPage(),
-        );
-    }
-    */
   }
 
   @override
@@ -120,72 +89,43 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>?> with C
       },
       onPopPage: (route, result) {
         print(' > on pop page: route=$route, result=$result');
-        /*
-        if (!route.didPop(result)) {
-          return false;
-        } else if (currentState.uri.pathSegments[0] == AppConfig.book().uri.pathSegments[0] &&
-            currentState.id != null) {
-          currentState = AppConfig.book();
-        } else if (currentState.uri.path == AppConfig.user().uri.path) {
-          currentState = previousState!;
-          previousState = null;
-        } else {
-          currentState = AppConfig.unknown();
-        }
-        notifyListeners();
-        */
         return true;
       },
     );
   }
 
   @override
-  Future<void> setNewRoutePath(IAppConfigAim<Map<String, String?>?> newState) async {
-    print(' > setRestoredRoutePath route=${newState.route}, args=${newState.args} ');
-    if (newState == currentState) return SynchronousFuture(null);
+  Future<void> setNewRoutePath(IAppConfigAim<Object?> configuration) async {
+    final config = typeConfig(configuration);
+    print(' > setRestoredRoutePath route=${config.route}, args=${config.args} ');
+    if (config == currentState) return SynchronousFuture(null);
 
-    currentState = newState;
+    currentState = config;
     notifyListeners();
 
     return SynchronousFuture(null);
   }
 
   @override
-  Future<void> setRestoredRoutePath(IAppConfigAim<Map<String, String?>?> configuration) {
-    print(' > setRestoredRoutePath $configuration');
-    return super.setRestoredRoutePath(configuration);
+  IAppConfigAim<Map<String, String?>?> typeConfig(IAppConfigAim<Object?> source) {
+    final args = source.args is Map<String, String?>? ? source.args as Map<String, String?>? : null;
+    final config = AppConfigAim<Map<String, String?>?>(source.route, args: args);
+    return config;
   }
 
   @override
-  Future<void> setInitialRoutePath(IAppConfigAim<Map<String, String?>?> configuration) {
-    print(' > setInitialRoutePath $configuration');
-    return super.setInitialRoutePath(configuration);
+  Future<void> setRestoredRoutePath(IAppConfigAim<Object?> configuration) {
+    final config = typeConfig(configuration);
+    print(' > setRestoredRoutePath $config');
+    return super.setRestoredRoutePath(config);
   }
 
-  /* use in button:
-  Router.navigate(context, () {
-                        (Router.of(context).routerDelegate as MyRouterDelegate).handleBookTapped(book);
-                      });
-
-  */
-
-  /*
-  void handleBookTapped(Book book) {
-    currentState = AppConfig.bookDetail(books.indexOf(book));
-    //notifyListeners();
-    setNewRoutePath(currentState);
+  @override
+  Future<void> setInitialRoutePath(IAppConfigAim<Object?> configuration) {
+    final config = typeConfig(configuration);
+    print(' > setInitialRoutePath $config');
+    return super.setInitialRoutePath(config);
   }
-
-  void handleUserTapped(void nulll) {
-    previousState = currentState;
-    currentState = AppConfig.user();
-    notifyListeners();
-  }
-
-  void _notifyListeners(void nothing) {
-    notifyListeners();
-  }
-  */
 
   @override
   Future<bool> popRoute() {

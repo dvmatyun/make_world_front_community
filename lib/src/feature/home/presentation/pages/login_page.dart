@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/design_elements/page/scaffold_aim.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
-import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation_pages/domain/navigator_aim.dart';
 
 /// {@template login_page}
 /// LoginPage widget
@@ -31,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () async {
               Router.navigate(context, () {
-                RouterDelegateAim.of(context).setNewRoutePath(const AppConfigMapAim.route(HomePage.routeName));
+                NavigatorAim.of(context).pushNamed(context, HomePage.routeName);
               });
             },
             child: const Text('Go to home'),

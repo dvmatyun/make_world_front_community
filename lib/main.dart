@@ -22,7 +22,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late final exampleRoutes = NavigationContainerAim();
 
-  late final navConfig = MaterialAppNavigatorConfigAim<Map<String, String?>?>(
+  late final navConfig = MaterialAppNavigatorConfigAim<MapString>(
     customRouteHandler: CustomRouteHandlerBaseAim(),
     routerDelegate: RouterDelegateAim(
       routesAim: exampleRoutes.routesAim,

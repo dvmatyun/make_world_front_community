@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
 
 abstract class IAppConfigAim<T> extends Equatable {
   const IAppConfigAim();
@@ -51,11 +52,11 @@ class AppConfigAim<T> extends IAppConfigAim<T> {
   }
 }
 
-class AppConfigMapAim extends IAppConfigAim<Map<String, String?>?> {
+class AppConfigMapAim extends IAppConfigAim<MapString> {
   @override
   final String route;
   @override
-  final Map<String, String?>? args;
+  final MapString args;
   final bool internalChange;
 
   const AppConfigMapAim(
@@ -79,9 +80,9 @@ class AppConfigMapAim extends IAppConfigAim<Map<String, String?>?> {
   List<Object?> get props => [route, internalChange, args];
 
   @override
-  IAppConfigAim<Map<String, String?>?> copyWith({
+  IAppConfigAim<MapString> copyWith({
     String? route,
-    Map<String, String?>? args,
+    MapString args,
     bool removeArgs = false,
   }) {
     return AppConfigMapAim(

@@ -44,10 +44,17 @@ class _MaterialNavigatorAimState<T> extends State<MaterialNavigatorAim<T>> {
   late final RouterInfoProviderAim routeInfoProvider;
 
   /* #region Lifecycle */
+
   @override
   void initState() {
     super.initState();
     _initNavigation();
+  }
+
+  @override
+  void dispose() {
+    navigatorConfig.routerDelegate.close();
+    super.dispose();
   }
 
   Future<void> _initNavigation() async {
@@ -89,11 +96,6 @@ class _MaterialNavigatorAimState<T> extends State<MaterialNavigatorAim<T>> {
     }
   }
 
-  @override
-  void dispose() {
-    // Permanent removal of a tree stent
-    super.dispose();
-  }
   /* #endregion */
 
   late final _splash = widget.navigatorConfig.routerDelegate.splashScreenRoute(AppConfigAim<T?>.route('', args: null));

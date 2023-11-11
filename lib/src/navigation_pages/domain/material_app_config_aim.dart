@@ -68,9 +68,6 @@ class CustomRouteHandlerBaseAim<T> extends ICustomRouteHandlerAim<T> {
 
   @override
   Future<IAppConfigAim<T?>?> initialAppLoader({required IAppConfigAim<T?>? rootRoute}) async {
-    if (rootRoute?.route == _homeRoute) {
-      return null;
-    }
     return AppConfigAim.route(_homeRoute, args: null);
   }
 

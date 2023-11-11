@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 
 /// {@template scaffold_aim}
 /// ScaffoldAim widget
@@ -23,28 +21,6 @@ class ScaffoldAim extends StatefulWidget {
 }
 
 class _ScaffoldAimState extends State<ScaffoldAim> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      //final theme = Theme.of(context);
-      await Future<void>.delayed(const Duration(milliseconds: 100));
-      await SystemChrome.setApplicationSwitcherDescription(
-        ApplicationSwitcherDescription(
-          label: widget.metaName,
-          primaryColor: 0,
-        ),
-      );
-    });
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(StringProperty('title', widget.metaName, defaultValue: ''));
-    //properties.add(ColorProperty('color', color, defaultValue: null));
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -16,24 +16,27 @@ class MirrorInfoPraser extends RouteInformationParser<RouteInformation> {
   }
 }
 
-class MyRouteInformationParser extends RouteInformationParser<AppConfigAim> {
+abstract class IRouteInformationParserAim<T> extends RouteInformationParser<IAppConfigAim<T>> {}
+
+class RouteInformationParserAim extends IRouteInformationParserAim<Map<String, String?>> {
+  String? _origin;
   @override
   Future<AppConfigAim> parseRouteInformation(RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location ?? '');
     print(' > parseRouteInformation [ri: ${routeInformation.location} / ${routeInformation.state}]'
         ' : ${uri.pathSegments.join('/')}');
-
+    _origin = uri.host;
     if (uri.pathSegments.isNotEmpty) {
       switch (uri.pathSegments[0]) {
         case HomePage.routeName:
         case LoginPage.routeName:
         case ShaderPage.routeName:
-          return AppConfigAim.custom(uri.pathSegments[0]);
+          return AppConfigAim(uri, uri.pathSegments[0]);
         default:
           break;
       }
     }
-    return AppConfigAim.custom('');
+    return AppConfigAim(uri, '');
     /*
     // Handle '/' and '/book'
     if (uri.pathSegments.isEmpty ||
@@ -61,14 +64,23 @@ class MyRouteInformationParser extends RouteInformationParser<AppConfigAim> {
   }
 
   @override
-  RouteInformation? restoreRouteInformation(AppConfigAim configuration) {
-    print(' > restoreRouteInformation : ${configuration.uri.path}');
-    if (configuration.uri.path.split('').every((e) => e == '/' || e == ' ')) {
+  RouteInformation? restoreRouteInformation(IAppConfigAim<Map<String, String?>> configuration) {
+    print(' > restoreRouteInformation : ${configuration.uri?.path}');
+    //if (_origin == null && configuration.uri == null) {
+    //  print(' > restoreRouteInformation : ORIGIN null result');
+    //  return const RouteInformation(location: '/');
+    //}
+    final uri = configuration.uri;
+    if (uri == null) {
+      return RouteInformation(location: '/${configuration.route}');
+    }
+
+    if (uri.path.split('').every((e) => e == '/' || e == ' ')) {
       print(' > restoreRouteInformation : null result');
       return const RouteInformation(location: '/');
     }
-    print(' > restoreRouteInformation : ${configuration.uri.path} result');
-    return RouteInformation(location: configuration.uri.path);
+    print(' > restoreRouteInformation : ${uri.path} result');
+    return RouteInformation(location: uri.path);
     /*
     if (path.isUnknown) {
       return RouteInformation(location: AppConfigAim.unknown().uri.path);

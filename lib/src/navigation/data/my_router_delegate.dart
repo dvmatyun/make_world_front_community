@@ -1,88 +1,57 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
+import 'package:make_world_front_community/design_elements/page/page_wrapper_aim.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
-import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
-import 'package:make_world_front_community/src/feature/splash/domain/services/app_base_service.dart';
-import 'package:make_world_front_community/src/feature/splash/presentation/pages/splash_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
+import 'package:make_world_front_community/src/navigation_pages/domain/page_aim.dart';
 
-class MirrorRouterDelegate extends RouterDelegate<RouteInformation> with ChangeNotifier {
-  RouteInformation? latestRoute;
-  Iterable<Page<dynamic>> get _pagesIterable sync* {
-    yield const MaterialPage(
-      key: ValueKey('LoginPage'),
-      name: 'LoginPage',
-      child: SplashPage(),
-    );
-  }
+typedef RouteBuilderAim<T> = IPageAim Function(IAppConfigAim<T> args);
 
-  @override
-  Widget build(BuildContext context) {
-    print('BookRouterDelegate building...');
-    return Navigator(
-      observers: const [],
-      pages: _pagesIterable.toList(),
-      reportsRouteUpdateToEngine: false,
-      onGenerateInitialRoutes: (ns, s) {
-        print(' > onGenerateInitialRoutes: $s');
-        return [];
-      },
-      onPopPage: (route, result) {
-        print(' > on pop page: route=$route, result=$result');
-        return true;
-      },
-    );
-  }
+abstract class IRouterDelegateAim<T> extends RouterDelegate<IAppConfigAim<T>> {}
 
-  @override
-  Future<void> setInitialRoutePath(RouteInformation configuration) {
-    print(' > MirrorRouterDelegate setInitialRoutePath ${configuration.location}');
-    latestRoute = configuration;
-    return super.setInitialRoutePath(configuration);
-  }
+//Map<String, String?>
+class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>> with ChangeNotifier {
+  RouterDelegateAim({
+    required this.routesAim,
+    required this.fallbackRoute,
+  });
 
-  @override
-  Future<bool> popRoute() {
-    return SynchronousFuture<bool>(false);
-  }
+  final Map<String, RouteBuilderAim<Map<String, String?>>> routesAim;
+  final RouteBuilderAim<Map<String, String?>?> fallbackRoute;
 
-  @override
-  Future<void> setNewRoutePath(RouteInformation configuration) async {
-    print(' > MirrorRouterDelegate setRestoredRoutePath ${configuration.location}');
-  }
-}
-
-class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier {
-  final IAppBaseService _baseService;
-  MyRouterDelegate(IAppBaseService baseService) : _baseService = baseService {
-    _init();
-  }
-
-  Future<void> _init() async {
-    await _baseService.init();
-    currentState = currentState.copyWith(internalChange: true);
-    notifyListeners();
-  }
-
-  static MyRouterDelegate of(BuildContext context) {
+  static RouterDelegateAim of(BuildContext context) {
     final delegate = Router.of(context).routerDelegate;
-    assert(delegate is MyRouterDelegate, 'Delegate type must match');
-    return delegate as MyRouterDelegate;
+    assert(delegate is RouterDelegateAim, 'Delegate type must match');
+    return delegate as RouterDelegateAim;
   }
 
-  AppConfigAim currentState = AppConfigAim.custom(LoginPage.routeName);
+  IAppConfigAim<Map<String, String?>> currentState = const AppConfigAim.route(LoginPage.routeName);
   final navigatorObserver = NavigatorObserver();
 
-  AppConfigAim? previousState;
+  IAppConfigAim<Map<String, String?>>? previousState;
   // for pop on User Page, to possibly go back to a specific book
 
   @override
-  AppConfigAim get currentConfiguration {
+  IAppConfigAim<Map<String, String?>> get currentConfiguration {
     return currentState;
   }
 
   Iterable<Page<dynamic>> get _pagesIterable sync* {
+    final state = currentState;
+    final routeName = state.route;
+    final routeBuilder = routesAim[routeName] ?? fallbackRoute;
+
+    final childPage = routeBuilder(state);
+    print(' > _pagesIterable: ${childPage.nameUi}');
+    yield MaterialPage(
+      key: ValueKey(childPage.key),
+      name: childPage.nameUi,
+      child: PageWrapperAim(
+        metaName: childPage.nameUi,
+        child: childPage.child,
+      ),
+    );
+    /*
     if (!_baseService.isLoaded) {
       yield const MaterialPage(
         key: ValueKey('SplashPage'),
@@ -121,6 +90,7 @@ class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier 
           child: LoginPage(),
         );
     }
+    */
   }
 
   @override
@@ -157,7 +127,7 @@ class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier 
   }
 
   @override
-  Future<void> setNewRoutePath(AppConfigAim newState) async {
+  Future<void> setNewRoutePath(IAppConfigAim<Map<String, String?>> newState) async {
     print(' > setRestoredRoutePath ${newState.uri}');
     if (newState == currentState) return SynchronousFuture(null);
 
@@ -168,13 +138,13 @@ class MyRouterDelegate extends RouterDelegate<AppConfigAim> with ChangeNotifier 
   }
 
   @override
-  Future<void> setRestoredRoutePath(AppConfigAim configuration) {
+  Future<void> setRestoredRoutePath(IAppConfigAim<Map<String, String?>> configuration) {
     print(' > setRestoredRoutePath $configuration');
     return super.setRestoredRoutePath(configuration);
   }
 
   @override
-  Future<void> setInitialRoutePath(AppConfigAim configuration) {
+  Future<void> setInitialRoutePath(IAppConfigAim<Map<String, String?>> configuration) {
     print(' > setInitialRoutePath $configuration');
     return super.setInitialRoutePath(configuration);
   }

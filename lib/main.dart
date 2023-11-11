@@ -1,85 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:make_world_front_community/src/feature/splash/data/services/app_base_service_impl.dart';
-import 'package:make_world_front_community/src/feature/splash/domain/services/app_base_service.dart';
+import 'package:make_world_front_community/src/feature/example_navigation/navigation_container_aim.dart';
+import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
+import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
+import 'package:make_world_front_community/src/feature/splash/presentation/pages/splash_page.dart';
 import 'package:make_world_front_community/src/navigation/data/my_route_information_parser.dart';
 import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
 import 'package:make_world_front_community/src/navigation/data/route_info_provider_aim.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
-
-/// {@template main}
-/// RootApp widget
-/// {@endtemplate}
-class RootApp extends StatefulWidget {
-  /// {@macro main}
-  const RootApp({super.key});
-
-  @override
-  State<RootApp> createState() => _RootAppState();
-}
-
-/// State for widget RootApp
-class _RootAppState extends State<RootApp> {
-  //
-  final routerDelegate = MirrorRouterDelegate();
-  final routeInformationParser = MirrorInfoPraser();
-  String? initialRoute;
-  //
-  final IAppBaseService _appBaseService = AppBaseServiceImpl();
-  bool isLoaded = false;
-
-  /* #region Lifecycle */
-  @override
-  void initState() {
-    super.initState();
-    _init();
-  }
-
-  Future<void> _init() async {
-    await _appBaseService.init();
-    isLoaded = true;
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    print(' > didChangeDependencies');
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(covariant RootApp oldWidget) {
-    print(' > didUpdateWidget');
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    // Permanent removal of a tree stent
-    super.dispose();
-  }
-  /* #endregion */
-
-  @override
-  Widget build(BuildContext context) {
-    //if (!isLoaded) {
-    //  return MaterialApp.router(
-    //    routerDelegate: routerDelegate,
-    //    routeInformationParser: routeInformationParser,
-    //    title: 'Flutter Demo',
-    //    theme: ThemeData(
-    //      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-    //      useMaterial3: true,
-    //    ),
-    //  );
-    //}
-    return MyApp(initialRoute: routerDelegate.latestRoute?.location);
-  }
+  runApp(const MyApp(
+      //initialRoute: SplashPage.routeName,
+      ));
 }
 
 class MyApp extends StatefulWidget {
@@ -95,9 +27,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final IAppBaseService _appBaseService = AppBaseServiceImpl();
-  late final routerDelegate = MyRouterDelegate(_appBaseService);
-  final routeInformationParser = MyRouteInformationParser();
+  late final exampleRoutes = NavigationContainerAim();
+  late final routerDelegate = RouterDelegateAim(
+    routesAim: exampleRoutes.routesAim,
+    fallbackRoute: exampleRoutes.fallbackRoute,
+  );
+  final routeInformationParser = RouteInformationParserAim();
   late final routeInfoProvider = RouterInfoProviderAim(
     initialRouteInformation: RouteInformation(
       location: widget.initialRoute,
@@ -113,6 +48,39 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      onGenerateRoute: (RouteSettings settings) {
+        // print current route for clarity.
+        print('>>> ${settings.name} <<<');
+
+        switch (settings.name?.replaceFirst('/', '')) {
+          case SplashPage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const SplashPage(),
+              // settings omitted to hide route name
+            );
+          case LoginPage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const LoginPage(),
+              settings: settings,
+            );
+          case HomePage.routeName:
+            return MaterialPageRoute(
+              builder: (context) => const HomePage(),
+              settings: settings,
+            );
+          case '/':
+            // don't generate route on start-up
+            return null;
+          default:
+            return MaterialPageRoute(
+              builder: (context) => const SplashPage(),
+            );
+        }
+      },
+      initialRoute: '/splash',
+    );
+
     return MaterialApp.router(
       routerDelegate: routerDelegate,
       routeInformationParser: routeInformationParser,

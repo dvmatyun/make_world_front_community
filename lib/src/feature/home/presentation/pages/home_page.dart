@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
           TextButton(
             onPressed: () async {
               Router.navigate(context, () {
-                MyRouterDelegate.of(context).setNewRoutePath(AppConfigAim.custom(LoginPage.routeName));
+                RouterDelegateAim.of(context).setNewRoutePath(const AppConfigAim.route(LoginPage.routeName));
               });
             },
             child: const Text('Go to login'),
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
           TextButton(
             onPressed: () async {
               Router.navigate(context, () {
-                MyRouterDelegate.of(context).setNewRoutePath(AppConfigAim.custom(ShaderPage.routeName));
+                RouterDelegateAim.of(context).setNewRoutePath(const AppConfigAim.route(ShaderPage.routeName));
               });
             },
             child: const Text('Go to shader'),

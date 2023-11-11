@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "mw community debug",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+            ]
+        },
+        {
             "name": "mw community canvas",
             "request": "launch",
             "type": "dart",

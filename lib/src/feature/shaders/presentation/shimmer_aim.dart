@@ -1,4 +1,4 @@
-import 'dart:ui' as ui show FragmentProgram, FragmentShader;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -64,12 +64,12 @@ class ShimmerAim extends StatefulWidget {
 
 class _ShimmerAimState extends State<ShimmerAim> with SingleTickerProviderStateMixin {
   /// Init shader.
-  static final Future<ui.FragmentShader?> _shaderFuture =
-      ui.FragmentProgram.fromAsset('assets/shaders/shimmer_aim.frag').then<ui.FragmentShader?>(
+  static final Future<FragmentShader?> _shaderFuture =
+      FragmentProgram.fromAsset('assets/shaders/shimmer_aim.frag').then<FragmentShader?>(
     (program) => program.fragmentShader(),
     onError: (e, __) => print(' > shader error: $e'),
   );
-  ui.FragmentShader? _shader;
+  FragmentShader? _shader;
 
   /// Seed value notifier for shader mutation.
   late final ValueNotifier<double> _seed;
@@ -139,7 +139,7 @@ class _ShimmerAimPainter extends CustomPainter {
   final Color backgroundColor;
   final double stripeWidth;
   final double cornerRadius;
-  final ui.FragmentShader? shader;
+  final FragmentShader? shader;
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -25,7 +25,7 @@ class ChatScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Router.navigate(context, () {
-                MyRouterDelegate.of(context).setNewRoutePath(AppConfigAim.custom(HomePage.routeName));
+                RouterDelegateAim.of(context).setNewRoutePath(AppConfigAim.route(HomePage.routeName));
                 //(Router.of(context).routerDelegate as MyRouterDelegate).handleBookTapped(book);
               });
             },

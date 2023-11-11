@@ -1,33 +1,67 @@
 import 'package:equatable/equatable.dart';
 
-class AppConfigAim extends Equatable {
-  final Uri uri;
-  final int? id;
+abstract class IAppConfigAim<T> extends Equatable {
+  const IAppConfigAim();
 
+  Uri? get uri;
+
+  /// Base route
+  String get route;
+  T get args;
+
+  IAppConfigAim<T> copyWith({
+    Uri? uri,
+    String? route,
+    T? args,
+  });
+}
+
+class AppConfigAim extends IAppConfigAim<Map<String, String?>> {
+  @override
+  final Uri? uri;
+
+  @override
+  final String route;
+  @override
+  final Map<String, String?> args;
   final bool internalChange;
 
-  AppConfigAim.custom(String path, {this.internalChange = false})
-      : uri = Uri(path: '/$path'),
-        id = null;
+  const AppConfigAim(
+    this.uri,
+    this.route, {
+    this.internalChange = false,
+    this.args = const {},
+  });
 
-  bool get isBookDetailSection => id != null;
+  AppConfigAim.uri(
+    String path,
+    this.route, {
+    this.internalChange = false,
+    this.args = const {},
+  }) : uri = Uri(path: '/$path');
+
+  const AppConfigAim.route(
+    this.route, {
+    this.uri,
+    this.args = const {},
+    this.internalChange = false,
+  });
 
   @override
   String toString() {
-    return 'AppConfig{ uriPath : ${uri.path}, id : $id}';
-  }
-
-  AppConfigAim copyWith({
-    Uri? uri,
-    int? id,
-    bool? internalChange,
-  }) {
-    return AppConfigAim.custom(
-      uri?.path ?? this.uri.path,
-      internalChange: internalChange ?? this.internalChange,
-    );
+    return 'AppConfigAim: { route: $route, uriPath : ${uri?.path}, args : $args}';
   }
 
   @override
-  List<Object?> get props => [uri.path, internalChange, id];
+  List<Object?> get props => [route, uri?.path, internalChange, args];
+
+  @override
+  IAppConfigAim<Map<String, String?>> copyWith({Uri? uri, String? route, Map<String, String?>? args}) {
+    return AppConfigAim(
+      uri ?? this.uri,
+      route ?? this.route,
+      //internalChange: internalChange ?? this.internalChange,
+      args: args ?? this.args,
+    );
+  }
 }

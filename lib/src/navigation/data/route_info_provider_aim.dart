@@ -32,6 +32,7 @@ class RouterInfoProviderAim extends RouteInformationProvider with WidgetsBinding
     final replace = type == RouteInformationReportingType.neglect ||
         (type == RouteInformationReportingType.none && _valueInEngine.location == routeInformation.location);
 
+    print('_handleInternal: ${routeInformation.location}');
     await SystemNavigator.selectMultiEntryHistory();
     await SystemNavigator.routeInformationUpdated(
       location: routeInformation.location!,

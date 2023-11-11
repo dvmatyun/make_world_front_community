@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
   const HomePage({required this.args, super.key});
 
   final IAppConfigAim<Map<String, String?>?> args;
-  static const String routeName = 'home';
+  static const String routeName = '/home';
 
   @override
   State<HomePage> createState() => _HomePageState();

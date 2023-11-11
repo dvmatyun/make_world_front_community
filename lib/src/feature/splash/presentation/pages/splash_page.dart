@@ -10,7 +10,7 @@ class SplashPage extends StatefulWidget {
   /// {@macro login_page}
   const SplashPage({super.key});
 
-  static const String routeName = 'splash';
+  static const String routeName = '/splash';
 
   @override
   State<SplashPage> createState() => _SplashPageState();

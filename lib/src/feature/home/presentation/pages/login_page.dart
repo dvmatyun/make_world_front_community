@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
   /// {@macro login_page}
   const LoginPage({super.key});
 
-  static const String routeName = 'login';
+  static const String routeName = '/login';
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () async {
               Router.navigate(context, () {
-                RouterDelegateAim.of(context).setNewRoutePath(AppConfigMapAim.route(HomePage.routeName));
+                RouterDelegateAim.of(context).setNewRoutePath(const AppConfigMapAim.route(HomePage.routeName));
               });
             },
             child: const Text('Go to home'),

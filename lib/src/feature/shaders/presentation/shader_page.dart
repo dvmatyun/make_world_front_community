@@ -12,7 +12,7 @@ class ShaderPage extends StatefulWidget {
   /// {@macro login_page}
   const ShaderPage({super.key});
 
-  static const String routeName = 'shader';
+  static const String routeName = '/shader';
 
   @override
   State<ShaderPage> createState() => _ShaderPageState();

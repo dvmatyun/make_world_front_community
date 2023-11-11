@@ -7,17 +7,30 @@ import 'package:make_world_front_community/src/navigation_pages/domain/page_aim.
 
 typedef RouteBuilderAim<T> = IPageAim Function(IAppConfigAim<T> args);
 
-abstract class IRouterDelegateAim<T> extends RouterDelegate<IAppConfigAim<T>> {}
+abstract class IRouterDelegateAim<T> extends RouterDelegate<IAppConfigAim<T>> {
+  Map<String, RouteBuilderAim<T>> get routesAim;
+
+  /// This page is shown if route is unknown
+  RouteBuilderAim<T?> get fallbackRoute;
+
+  /// This page is shown when app is loading
+  RouteBuilderAim<T?> get splashScreenRoute;
+}
 
 //Map<String, String?>
-class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>> with ChangeNotifier {
+class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>?> with ChangeNotifier {
   RouterDelegateAim({
     required this.routesAim,
     required this.fallbackRoute,
+    required this.splashScreenRoute,
   });
 
-  final Map<String, RouteBuilderAim<Map<String, String?>>> routesAim;
+  @override
+  final Map<String, RouteBuilderAim<Map<String, String?>?>> routesAim;
+  @override
   final RouteBuilderAim<Map<String, String?>?> fallbackRoute;
+  @override
+  final RouteBuilderAim<Map<String, String?>?> splashScreenRoute;
 
   static RouterDelegateAim of(BuildContext context) {
     final delegate = Router.of(context).routerDelegate;
@@ -25,14 +38,14 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>> with Ch
     return delegate as RouterDelegateAim;
   }
 
-  IAppConfigAim<Map<String, String?>> currentState = const AppConfigAim.route(LoginPage.routeName);
+  IAppConfigAim<Map<String, String?>?> currentState = const AppConfigMapAim.route(LoginPage.routeName);
   final navigatorObserver = NavigatorObserver();
 
   IAppConfigAim<Map<String, String?>>? previousState;
   // for pop on User Page, to possibly go back to a specific book
 
   @override
-  IAppConfigAim<Map<String, String?>> get currentConfiguration {
+  IAppConfigAim<Map<String, String?>?> get currentConfiguration {
     return currentState;
   }
 
@@ -42,7 +55,7 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>> with Ch
     final routeBuilder = routesAim[routeName] ?? fallbackRoute;
 
     final childPage = routeBuilder(state);
-    print(' > _pagesIterable: ${childPage.nameUi}');
+    print(' > _pagesIterable (route name: $routeName) page: ${childPage.nameUi}');
     yield MaterialPage(
       key: ValueKey(childPage.key),
       name: childPage.nameUi,
@@ -127,8 +140,8 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>> with Ch
   }
 
   @override
-  Future<void> setNewRoutePath(IAppConfigAim<Map<String, String?>> newState) async {
-    print(' > setRestoredRoutePath ${newState.uri}');
+  Future<void> setNewRoutePath(IAppConfigAim<Map<String, String?>?> newState) async {
+    print(' > setRestoredRoutePath route=${newState.route}, args=${newState.args} ');
     if (newState == currentState) return SynchronousFuture(null);
 
     currentState = newState;
@@ -138,13 +151,13 @@ class RouterDelegateAim extends IRouterDelegateAim<Map<String, String?>> with Ch
   }
 
   @override
-  Future<void> setRestoredRoutePath(IAppConfigAim<Map<String, String?>> configuration) {
+  Future<void> setRestoredRoutePath(IAppConfigAim<Map<String, String?>?> configuration) {
     print(' > setRestoredRoutePath $configuration');
     return super.setRestoredRoutePath(configuration);
   }
 
   @override
-  Future<void> setInitialRoutePath(IAppConfigAim<Map<String, String?>> configuration) {
+  Future<void> setInitialRoutePath(IAppConfigAim<Map<String, String?>?> configuration) {
     print(' > setInitialRoutePath $configuration');
     return super.setInitialRoutePath(configuration);
   }

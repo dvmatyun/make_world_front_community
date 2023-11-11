@@ -34,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
     _setState();
     await Future<void>.delayed(const Duration(seconds: 1));
     if (mounted) {
-      await RouterDelegateAim.of(context).setNewRoutePath(const AppConfigAim.route(HomePage.routeName));
+      await RouterDelegateAim.of(context).setNewRoutePath(const AppConfigMapAim.route(HomePage.routeName));
     }
   }
 

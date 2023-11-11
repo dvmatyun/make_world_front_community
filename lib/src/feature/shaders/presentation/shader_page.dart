@@ -32,7 +32,7 @@ class _ShaderPageState extends State<ShaderPage> {
           TextButton(
             onPressed: () async {
               Router.navigate(context, () {
-                RouterDelegateAim.of(context).setNewRoutePath(AppConfigAim.route(HomePage.routeName));
+                RouterDelegateAim.of(context).setNewRoutePath(const AppConfigMapAim.route(HomePage.routeName));
               });
             },
             child: const Text('Go to home'),

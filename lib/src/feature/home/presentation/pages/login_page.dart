@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () async {
               Router.navigate(context, () {
-                RouterDelegateAim.of(context).setNewRoutePath(AppConfigAim.route(HomePage.routeName));
+                RouterDelegateAim.of(context).setNewRoutePath(AppConfigMapAim.route(HomePage.routeName));
               });
             },
             child: const Text('Go to home'),

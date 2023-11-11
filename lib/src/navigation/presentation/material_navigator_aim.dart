@@ -1,55 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
-import 'package:make_world_front_community/src/navigation/data/my_route_information_parser.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
 import 'package:make_world_front_community/src/navigation/data/route_info_provider_aim.dart';
+import 'package:make_world_front_community/src/navigation_pages/domain/material_app_config_aim.dart';
 
 /// {@template material_navigator_aim}
 /// MaterialNavigatorAim widget
 /// {@endtemplate}
-class MaterialNavigatorAim extends StatefulWidget {
+class MaterialNavigatorAim<T> extends StatefulWidget {
   /// {@macro material_navigator_aim}
   const MaterialNavigatorAim({
-    required this.routesAim,
-    required this.fallbackRoute,
-    required this.splashScreenRoute,
+    required this.navigatorConfig,
     this.title = 'Flutter Demo',
     super.key,
   });
 
-  final Map<String, RouteBuilderAim<Map<String, String?>>> routesAim;
-  final RouteBuilderAim<Map<String, String?>?> fallbackRoute;
-  final RouteBuilderAim<Map<String, String?>?> splashScreenRoute;
+  final MaterialAppNavigatorConfigAim<T> navigatorConfig;
+
   final String title;
 
   @override
-  State<MaterialNavigatorAim> createState() => _MaterialNavigatorAimState();
+  State<MaterialNavigatorAim<T>> createState() => _MaterialNavigatorAimState<T>();
 }
 
 /// State for widget MaterialNavigatorAim
-class _MaterialNavigatorAimState extends State<MaterialNavigatorAim> {
-  String _latestRoute = '/';
+class _MaterialNavigatorAimState<T> extends State<MaterialNavigatorAim<T>> {
+  late final MaterialAppNavigatorConfigAim<T> navigatorConfig = widget.navigatorConfig;
+
+  RouteInformation _latestRoute = const RouteInformation(location: '/', state: null);
   bool _navigatorInitialized = false;
-  late final IRouterDelegateAim<Map<String, String?>> routerDelegate = RouterDelegateAim(
-    routesAim: widget.routesAim,
-    fallbackRoute: widget.fallbackRoute,
-  );
-  final IRouteInformationParserAim<Map<String, String?>> routeInformationParser = RouteInformationParserAim();
+
   late final RouterInfoProviderAim routeInfoProvider;
 
   /* #region Lifecycle */
   @override
   void initState() {
     super.initState();
-    // Initial state initialization
+    _initNavigation();
   }
 
   Future<void> _initNavigation() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
+    final routeHandler = widget.navigatorConfig.customRouteHandler;
+    final initialRouteTask = routeHandler.initialAppLoader();
+    final tasks = <Future>[
+      Future<void>.delayed(const Duration(seconds: 1)),
+      initialRouteTask,
+    ];
+
+    await Future.wait(tasks);
+    final initialRouteApp = await initialRouteTask;
+    final platformRoute = await widget.navigatorConfig.routeInformationParser.parseRouteInformation(_latestRoute);
+    final chosenRoute = await routeHandler.chooseInitialRoute(
+      appLoaderRoute: initialRouteApp,
+      platformInitialRoute: platformRoute,
+    );
+    final chosenRouteInfo = widget.navigatorConfig.routeInformationParser.restoreRouteInformation(chosenRoute);
+
     routeInfoProvider = RouterInfoProviderAim(
-      initialRouteInformation: RouteInformation(
-        location: _latestRoute,
-      ),
+      initialRouteInformation: chosenRouteInfo ?? _latestRoute,
     );
 
     if (mounted) {
@@ -57,19 +64,6 @@ class _MaterialNavigatorAimState extends State<MaterialNavigatorAim> {
         _navigatorInitialized = true;
       });
     }
-  }
-
-  @override
-  void didUpdateWidget(MaterialNavigatorAim oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Widget configuration changed
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // The configuration of InheritedWidgets has changed
-    // Also called after initState but before build
   }
 
   @override
@@ -87,8 +81,9 @@ class _MaterialNavigatorAimState extends State<MaterialNavigatorAim> {
         onGenerateRoute: (RouteSettings settings) {
           // print current route for clarity.
           print('>>> ${settings.name} <<<');
-          _latestRoute = settings.name ?? '/';
-          final splash = widget.splashScreenRoute(const AppConfigAim.route(''));
+          _latestRoute = RouteInformation(location: settings.name ?? '/', state: null);
+          final splash =
+              widget.navigatorConfig.routerDelegate.splashScreenRoute(AppConfigAim<T?>.route('', args: null));
 
           return MaterialPageRoute(
             builder: (context) => splash.child,
@@ -99,8 +94,8 @@ class _MaterialNavigatorAimState extends State<MaterialNavigatorAim> {
     }
 
     return MaterialApp.router(
-      routerDelegate: routerDelegate,
-      routeInformationParser: routeInformationParser,
+      routerDelegate: widget.navigatorConfig.routerDelegate,
+      routeInformationParser: widget.navigatorConfig.routeInformationParser,
       routeInformationProvider: routeInfoProvider,
       title: widget.title,
       theme: ThemeData(

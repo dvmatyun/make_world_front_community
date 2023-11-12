@@ -34,7 +34,11 @@ class _MyAppState extends State<MyApp> {
       splashScreenRoute: exampleRoutes.splashRoute,
     ),
     routeInformationParser: const RouteInformationParserAim(),
-    routeFactory: (route, args) => AppConfigMapAim.route(route, args: args),
+    routeFactory: (route, args) {
+      // ignore: unnecessary_cast
+      final result = AppConfigMapAim.route(route, args: args) as IAppConfigAim<MapString>?;
+      return result;
+    },
   );
 
   final imperitivePageBuilder = ExampleImperativePageBuilderAim();

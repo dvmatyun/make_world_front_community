@@ -29,9 +29,9 @@ abstract class ImperativePageBuilderBaseAim implements IImperativePageBuilderAim
     final navigator = NavigatorAim.of(context)..addToState(context, routeArgs);
     _modalWindowOnScreen = name;
     final value = await buildImperativePage(context, routeArgs);
-    final args = navigator.config.routerDelegate.typedConfig.args as MapString?;
+    final args = navigator.config.routerDelegate.typedConfig.args;
     final modalValue = args?[_modalRouteName];
-    if (modalValue == name) {
+    if (modalValue == name || modalValue == null) {
       _modalWindowOnScreen = null;
       navigator.removeFromState(context, routeArgs);
     }

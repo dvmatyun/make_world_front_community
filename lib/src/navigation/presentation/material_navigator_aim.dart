@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/route_info_provider_aim.dart';
+import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/data/navigator_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/imperative_page_builder_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/material_app_config_aim.dart';
@@ -10,36 +11,36 @@ import 'package:make_world_front_community/src/navigation_pages/domain/navigator
 /// {@template material_navigator_aim}
 /// MaterialNavigatorAim widget
 /// {@endtemplate}
-class MaterialNavigatorAim<T> extends StatefulWidget {
+class MaterialNavigatorAim extends StatefulWidget {
   /// {@macro material_navigator_aim}
   MaterialNavigatorAim({
     required this.navigatorConfig,
-    IImperativePageBuilderAim<T>? imperativePageBuilder,
+    IImperativePageBuilderAim<MapString>? imperativePageBuilder,
     this.title = 'Flutter Demo',
     super.key,
-  }) : navigator = NavigatorAimImpl(
+  }) : navigator = NavigatorAimImpl<MapString>(
           config: navigatorConfig,
           imperativePageBuilder: imperativePageBuilder,
         );
 
-  final MaterialAppNavigatorConfigAim<T> navigatorConfig;
-  final NavigatorAim navigator;
+  final MaterialAppNavigatorConfigAim<MapString> navigatorConfig;
+  final NavigatorAim<MapString> navigator;
 
   final String title;
 
   @internal
-  static _MaterialNavigatorAimState? maybeOf(BuildContext context) =>
-      context.findAncestorStateOfType<_MaterialNavigatorAimState>();
+  static _MaterialNavigatorAimState<MapString>? maybeOf(BuildContext context) =>
+      context.findAncestorStateOfType<_MaterialNavigatorAimState<MapString>>();
 
   @override
-  State<MaterialNavigatorAim<T>> createState() => _MaterialNavigatorAimState<T>();
+  State<MaterialNavigatorAim> createState() => _MaterialNavigatorAimState<MapString>();
 }
 
 /// State for widget MaterialNavigatorAim
-class _MaterialNavigatorAimState<T> extends State<MaterialNavigatorAim<T>> {
-  NavigatorAim get navigator => widget.navigator;
+class _MaterialNavigatorAimState<MapString> extends State<MaterialNavigatorAim> {
+  NavigatorAim<MapString> get navigator => widget.navigator as NavigatorAim<MapString>;
 
-  late final MaterialAppNavigatorConfigAim<T> navigatorConfig = widget.navigatorConfig;
+  late final navigatorConfig = widget.navigatorConfig;
 
   RouteInformation _latestRoute = const RouteInformation(location: '/', state: null);
   bool _navigatorInitialized = false;
@@ -139,7 +140,7 @@ class _RootAimWidget extends StatefulWidget {
   /// {@macro material_navigator_aim}
   const _RootAimWidget({required this.nestedRoute, required this.child});
 
-  final IAppConfigAim? nestedRoute;
+  final IAppConfigAim<MapString>? nestedRoute;
   final Widget? child;
 
   @override

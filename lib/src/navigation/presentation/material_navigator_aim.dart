@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/route_info_provider_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/data/navigator_aim.dart';
+import 'package:make_world_front_community/src/navigation_pages/domain/imperative_page_builder_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/material_app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/navigator_aim.dart';
 
@@ -13,10 +14,12 @@ class MaterialNavigatorAim<T> extends StatefulWidget {
   /// {@macro material_navigator_aim}
   MaterialNavigatorAim({
     required this.navigatorConfig,
+    IImperativePageBuilderAim<T>? imperativePageBuilder,
     this.title = 'Flutter Demo',
     super.key,
   }) : navigator = NavigatorAimImpl(
           config: navigatorConfig,
+          imperativePageBuilder: imperativePageBuilder,
         );
 
   final MaterialAppNavigatorConfigAim<T> navigatorConfig;
@@ -98,7 +101,7 @@ class _MaterialNavigatorAimState<T> extends State<MaterialNavigatorAim<T>> {
 
   /* #endregion */
 
-  late final _splash = widget.navigatorConfig.routerDelegate.splashScreenRoute(AppConfigAim<T?>.route('', args: null));
+  late final _splash = widget.navigatorConfig.routerDelegate.splashScreenRoute(navigatorConfig.routeFactory('', null)!);
   @override
   Widget build(BuildContext context) {
     if (!_navigatorInitialized) {

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 
 abstract class IAppConfigAim<T> extends Equatable {
   const IAppConfigAim();
@@ -13,9 +13,15 @@ abstract class IAppConfigAim<T> extends Equatable {
     T? args,
     bool removeArgs = false,
   });
+
+  /// Should add to state, preserving old state args
+  IAppConfigAim<T> addToState({required T args});
+
+  /// Should remove part of state, depending on args
+  IAppConfigAim<T> removeFromState({required T args});
 }
 
-class AppConfigAim<T> extends IAppConfigAim<T> {
+abstract class AppConfigAim<T> extends IAppConfigAim<T> {
   @override
   final String route;
   @override
@@ -44,12 +50,15 @@ class AppConfigAim<T> extends IAppConfigAim<T> {
     String? route,
     T? args,
     bool removeArgs = false,
-  }) {
-    return AppConfigAim(
-      route ?? this.route,
-      args: removeArgs ? null : (args ?? this.args),
-    );
-  }
+  });
+
+  /// Should add to state, preserving old state args
+  @override
+  IAppConfigAim<T> addToState({required T args});
+
+  /// Should remove part of state, depending on args
+  @override
+  IAppConfigAim<T> removeFromState({required T args});
 }
 
 class AppConfigMapAim extends IAppConfigAim<MapString> {
@@ -89,5 +98,33 @@ class AppConfigMapAim extends IAppConfigAim<MapString> {
       route ?? this.route,
       args: removeArgs ? null : (args ?? this.args),
     );
+  }
+
+  /// Should add to state, preserving old state args
+  @override
+  IAppConfigAim<MapString> addToState({MapString? args}) {
+    final newState = <String, String?>{};
+    final curArgs = this.args;
+    if (curArgs != null) {
+      newState.addAll(curArgs);
+    }
+    if (args != null) {
+      newState.addAll(args);
+    }
+    return copyWith(args: newState);
+  }
+
+  /// Should remove part of state, depending on args
+  @override
+  IAppConfigAim<MapString> removeFromState({required MapString? args}) {
+    final newState = <String, String?>{};
+    final curArgs = this.args;
+    if (curArgs != null) {
+      newState.addAll(curArgs);
+    }
+    if (args != null) {
+      newState.removeWhere((key, value) => args.containsKey(key));
+    }
+    return copyWith(args: newState);
   }
 }

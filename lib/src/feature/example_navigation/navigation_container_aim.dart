@@ -3,11 +3,11 @@ import 'package:make_world_front_community/src/feature/home/presentation/pages/l
 import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
 import 'package:make_world_front_community/src/feature/splash/presentation/pages/splash_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/data/page_aim_impl.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/page_aim.dart';
 
-class NavigationContainerAim {
+class ExampleNavigationContainerAim {
   final Map<String, RouteBuilderAim<MapString>> routesAim = {
     '/': (args) => PageAim(name: 'Home', child: HomePage(navigatorState: args)),
     LoginPage.routeName: (args) => PageAim(name: 'Login', child: const LoginPage()),

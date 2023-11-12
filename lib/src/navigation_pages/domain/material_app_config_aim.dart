@@ -1,12 +1,13 @@
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
-import 'package:make_world_front_community/src/navigation/data/my_route_information_parser.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation/data/route_information_parser_aim.dart';
+import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 
 class MaterialAppNavigatorConfigAim<T> {
   const MaterialAppNavigatorConfigAim({
     required this.customRouteHandler,
     required this.routerDelegate,
     required this.routeInformationParser,
+    required this.routeFactory,
   });
 
   /// Handle initial route
@@ -17,6 +18,8 @@ class MaterialAppNavigatorConfigAim<T> {
 
   /// Parse route to URL and back to logical object of route
   final IRouteInformationParserAim<T?> routeInformationParser;
+
+  final RouteConfigAimFactory<T> routeFactory;
 }
 
 abstract class ICustomRouteHandlerAim<T> {
@@ -52,23 +55,29 @@ abstract class ICustomRouteHandlerAim<T> {
   IAppConfigAim<T?>? get initialPlatformRoute => _initialPlatformRoute;
 }
 
+typedef RouteConfigAimFactory<T> = IAppConfigAim<T?>? Function(String route, T? args);
+
 class CustomRouteHandlerBaseAim<T> extends ICustomRouteHandlerAim<T> {
   final String _homeRoute;
   final String _splashScreenRoute;
   CustomRouteHandlerBaseAim({
+    required RouteConfigAimFactory<T> routeFactory,
     String homeRoute = '/home',
     String splashScreenRoute = '/splash',
   })  : _homeRoute = homeRoute,
-        _splashScreenRoute = splashScreenRoute;
+        _splashScreenRoute = splashScreenRoute,
+        _routeFactory = routeFactory;
+
+  final RouteConfigAimFactory<T> _routeFactory;
 
   @override
   Future<IAppConfigAim<T?>?> rootRouteLoader() async {
-    return AppConfigAim.route(_homeRoute, args: null);
+    return _routeFactory(_homeRoute, null);
   }
 
   @override
   Future<IAppConfigAim<T?>?> initialAppLoader({required IAppConfigAim<T?>? rootRoute}) async {
-    return AppConfigAim.route(_homeRoute, args: null);
+    return _routeFactory(_homeRoute, null);
   }
 
   @override

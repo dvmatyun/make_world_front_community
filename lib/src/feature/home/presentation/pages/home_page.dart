@@ -3,7 +3,7 @@ import 'package:make_world_front_community/design_elements/page/scaffold_aim.dar
 import 'package:make_world_front_community/src/feature/home/presentation/pages/login_page.dart';
 import 'package:make_world_front_community/src/feature/shaders/presentation/shader_page.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/navigator_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/presentation/logic_page_aim.dart';
 
@@ -34,6 +34,7 @@ class _HomePageState extends PageArgumentSyncState<HomePage> {
   void syncArgumentToState(MapString args) {
     final counterStr = args?[_counterKey] ?? '0';
     counter = int.tryParse(counterStr) ?? 0;
+    super.syncArgumentToState(args);
   }
 
   @override
@@ -58,17 +59,52 @@ class _HomePageState extends PageArgumentSyncState<HomePage> {
             child: const Text('Go to shader'),
           ),
           const SizedBox(height: 10),
-          TextButton(
-            onPressed: () {
-              final counterNew = counter + 1;
-              Router.neglect(context, () {
-                NavigatorAim.of(context).changeState(context, {_counterKey: '$counterNew'});
-              });
-            },
-            child: Text('increase counter (value=$counter)'),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  final counterNew = counter + 1;
+                  NavigatorAim.of(context).addToState(context, {_counterKey: '$counterNew'});
+                },
+                child: Text('increase counter (value=$counter)'),
+              ),
+              const SizedBox(width: 10),
+              TextButton(
+                onPressed: () {
+                  NavigatorAim.of(context).removeFromState(context, {_counterKey: ''});
+                },
+                child: const Text('Clear counter'),
+              ),
+            ],
           ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  show(context, 'modal window #1');
+                },
+                child: const Text('Show modal #1'),
+              ),
+              const SizedBox(height: 10),
+              TextButton(
+                onPressed: () {
+                  show(context, 'modal window #2');
+                },
+                child: const Text('Show modal #2'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
         ],
       ),
     );
+  }
+
+  /// Shows this dialog on top of all screens.
+  Future<Object?> show(BuildContext context, String name) async {
+    final navigator = NavigatorAim.of(context);
+    final value = await navigator.pushImperativePage(context, name);
+    return value;
   }
 }

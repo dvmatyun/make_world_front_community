@@ -7,13 +7,13 @@ class ScaffoldAim extends StatefulWidget {
   /// {@macro scaffold_aim}
   const ScaffoldAim({
     required this.body,
-    required this.metaName,
+    this.metaName,
     this.appBarWidget,
     super.key,
   });
 
   final Widget body;
-  final String metaName;
+  final String? metaName;
   final Widget? appBarWidget;
 
   @override

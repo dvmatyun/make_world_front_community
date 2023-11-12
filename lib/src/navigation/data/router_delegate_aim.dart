@@ -131,11 +131,6 @@ class RouterDelegateAim extends IRouterDelegateAim<MapString> with ChangeNotifie
 
     if (config == _currentState) return SynchronousFuture(null);
 
-    //final currentPage = routesAim[_currentState.route]?.call(config);
-    //final newPage = routesAim[config.route]?.call(config);
-    //if (currentPage?.key == newPage?.key) {
-    //  return SynchronousFuture(null);
-    //}
     if (!isPop) {
       if (config.route != _currentState.route) {
         _addToHistory(config);
@@ -173,7 +168,7 @@ class RouterDelegateAim extends IRouterDelegateAim<MapString> with ChangeNotifie
   @override
   IAppConfigAim<MapString> typeConfig(IAppConfigAim<Object?> source) {
     final args = source.args is MapString ? source.args as MapString : null;
-    final config = AppConfigAim<MapString>(source.route, args: args);
+    final config = AppConfigMapAim(source.route, args: args);
     return config;
   }
 

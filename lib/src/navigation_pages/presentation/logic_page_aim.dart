@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
-import 'package:make_world_front_community/src/navigation/data/my_router_delegate.dart';
+import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
+import 'package:make_world_front_community/src/navigation_pages/domain/navigator_aim.dart';
 
 abstract class PageArgumentSyncWidget extends StatefulWidget {
   const PageArgumentSyncWidget({super.key});
@@ -23,5 +24,14 @@ abstract class PageArgumentSyncState<T extends PageArgumentSyncWidget> extends S
     syncArgumentToState(widget.navigatorState.args);
   }
 
-  void syncArgumentToState(MapString args);
+  void syncArgumentToState(MapString args) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final navigator = NavigatorAim.of(context);
+      final modalName = navigator.needToPushNewModal(context, args);
+      if (modalName == null) {
+        return;
+      }
+      navigator.pushImperativePage(context, modalName);
+    });
+  }
 }

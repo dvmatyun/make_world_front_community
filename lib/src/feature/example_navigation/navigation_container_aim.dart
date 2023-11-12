@@ -9,7 +9,7 @@ import 'package:make_world_front_community/src/navigation_pages/domain/page_aim.
 
 class ExampleNavigationContainerAim {
   final Map<String, RouteBuilderAim<MapString>> routesAim = {
-    '/': (args) => PageAim(name: 'Home', child: HomePage(navigatorState: args)),
+    '/': (args) => PageAim(name: 'Qyre', child: HomePage(navigatorState: args)),
     LoginPage.routeName: (args) => PageAim(name: 'Login', child: const LoginPage()),
     HomePage.routeName: (args) => PageAim(name: 'Home', child: HomePage(navigatorState: args)),
     ShaderPage.routeName: (args) => PageAim(name: 'Shader', child: const ShaderPage()),

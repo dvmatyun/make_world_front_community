@@ -1,8 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 
-abstract class IAppConfigAim<T> extends Equatable {
+abstract class IIdAim {
+  String get id;
+}
+
+abstract class IAppConfigAim<T> extends Equatable implements IIdAim {
   const IAppConfigAim();
+
+  @override
+  String get id => route;
 
   /// Base route
   String get route;

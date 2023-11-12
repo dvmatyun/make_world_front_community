@@ -31,6 +31,12 @@ class _HomePageState extends PageArgumentSyncState<HomePage> {
   static const _counterKey = 'counter';
 
   @override
+  void initState() {
+    super.initState();
+    print('initState');
+  }
+
+  @override
   void syncArgumentToState(MapString args) {
     final counterStr = args?[_counterKey] ?? '0';
     counter = int.tryParse(counterStr) ?? 0;
@@ -43,60 +49,64 @@ class _HomePageState extends PageArgumentSyncState<HomePage> {
     return ScaffoldAim(
       appBarWidget: const Text(name),
       metaName: name,
-      body: Column(
-        children: [
-          const Text('Do a login here'),
-          TextButton(
-            onPressed: () {
-              NavigatorAim.of(context).pushNamed(context, LoginPage.routeName);
-            },
-            child: const Text('Go to login'),
-          ),
-          TextButton(
-            onPressed: () {
-              NavigatorAim.of(context).pushNamed(context, ShaderPage.routeName);
-            },
-            child: const Text('Go to shader'),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  final counterNew = counter + 1;
-                  NavigatorAim.of(context).addToState(context, {_counterKey: '$counterNew'});
-                },
-                child: Text('increase counter (value=$counter)'),
-              ),
-              const SizedBox(width: 10),
-              TextButton(
-                onPressed: () {
-                  NavigatorAim.of(context).removeFromState(context, {_counterKey: ''});
-                },
-                child: const Text('Clear counter'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              TextButton(
-                onPressed: () {
-                  show(context, 'modal window #1');
-                },
-                child: const Text('Show modal #1'),
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  show(context, 'modal window #2');
-                },
-                child: const Text('Show modal #2'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 36),
+        child: Column(
+          children: [
+            const Text('Do a login here'),
+            TextButton(
+              onPressed: () {
+                NavigatorAim.of(context).pushNamed(context, LoginPage.routeName);
+              },
+              child: const Text('Go to login'),
+            ),
+            TextButton(
+              onPressed: () {
+                NavigatorAim.of(context).pushNamed(context, ShaderPage.routeName);
+              },
+              child: const Text('Go to shader'),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    final counterNew = counter + 1;
+                    NavigatorAim.of(context).addToState(context, {_counterKey: '$counterNew'});
+                  },
+                  child: Text('increase counter (value=$counter)'),
+                ),
+                const SizedBox(width: 10),
+                TextButton(
+                  onPressed: () {
+                    NavigatorAim.of(context).removeFromState(context, {_counterKey: ''});
+                  },
+                  child: const Text('Clear counter'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              children: [
+                TextButton(
+                  onPressed: () {
+                    show(context, 'modal window #1');
+                  },
+                  child: const Text('Show modal #1'),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    show(context, 'modal window #2');
+                  },
+                  child: const Text('Show modal #2'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            const TextField(),
+          ],
+        ),
       ),
     );
   }

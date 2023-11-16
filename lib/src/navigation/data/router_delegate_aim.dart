@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:make_world_front_community/design_elements/page/page_wrapper_aim.dart';
+import 'package:make_world_front_community/src/navigation_pages/presentation/page_wrapper_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/page_aim.dart';
 
 typedef RouteBuilderAim<T> = IPageAim Function(IAppConfigAim<T> args);
 typedef MapString = Map<String, String?>?;
+typedef RouteGuardAim<T> = Future<IAppConfigAim<T?>> Function(IAppConfigAim<T> routeToCheck);
 
 abstract class IRouterDelegateAim<T> extends RouterDelegate<IAppConfigAim<Object?>> {
   Map<String, RouteBuilderAim<T?>> get routesAim;
@@ -34,6 +35,7 @@ class RouterDelegateAim extends IRouterDelegateAim<MapString> with ChangeNotifie
     required this.routesAim,
     required this.fallbackRoute,
     required this.splashScreenRoute,
+    required this.routeGuard,
   });
 
   @override
@@ -42,6 +44,8 @@ class RouterDelegateAim extends IRouterDelegateAim<MapString> with ChangeNotifie
   final RouteBuilderAim<MapString> fallbackRoute;
   @override
   final RouteBuilderAim<MapString> splashScreenRoute;
+
+  final RouteGuardAim<MapString>? routeGuard;
 
   final _routesSc = StreamController<IAppConfigAim<MapString>>.broadcast();
   @override
@@ -175,7 +179,10 @@ class RouterDelegateAim extends IRouterDelegateAim<MapString> with ChangeNotifie
 
   @override
   Future<void> setNewRoutePath(IAppConfigAim<Object?> configuration, {bool isPop = false}) async {
-    final config = typeConfig(configuration);
+    var config = typeConfig(configuration);
+    if (routeGuard != null) {
+      config = await routeGuard!(config);
+    }
     print(' > setNewRoutePath');
     if (config == _currentState) return SynchronousFuture(null);
 

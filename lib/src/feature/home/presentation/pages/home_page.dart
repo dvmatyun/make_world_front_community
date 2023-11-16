@@ -53,6 +53,7 @@ class _HomePageState extends PageArgumentSyncState<HomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 36),
         child: Column(
           children: [
+            Text('Initial platform route: ${NavigatorAim.of(context).config.customRouteHandler.initialPlatformRoute}'),
             const Text('Do a login here'),
             TextButton(
               onPressed: () {

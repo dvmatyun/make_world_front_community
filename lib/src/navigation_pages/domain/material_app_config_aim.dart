@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/route_information_parser_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
@@ -58,26 +59,27 @@ abstract class ICustomRouteHandlerAim<T> {
 typedef RouteConfigAimFactory<T> = IAppConfigAim<T?>? Function(String route, T? args);
 
 class CustomRouteHandlerBaseAim<T> extends ICustomRouteHandlerAim<T> {
-  final String _homeRoute;
-  final String _splashScreenRoute;
   CustomRouteHandlerBaseAim({
-    required RouteConfigAimFactory<T> routeFactory,
-    String homeRoute = '/home',
-    String splashScreenRoute = '/splash',
-  })  : _homeRoute = homeRoute,
-        _splashScreenRoute = splashScreenRoute,
-        _routeFactory = routeFactory;
+    required this.routeFactory,
+    this.homeRoute = '/home',
+    this.splashScreenRoute = '/splash',
+  });
 
-  final RouteConfigAimFactory<T> _routeFactory;
+  @protected
+  final String homeRoute;
+  @protected
+  final String splashScreenRoute;
+  @protected
+  final RouteConfigAimFactory<T> routeFactory;
 
   @override
   Future<IAppConfigAim<T?>?> rootRouteLoader() async {
-    return _routeFactory(_homeRoute, null);
+    return routeFactory(homeRoute, null);
   }
 
   @override
   Future<IAppConfigAim<T?>?> initialAppLoader({required IAppConfigAim<T?>? rootRoute}) async {
-    return _routeFactory(_homeRoute, null);
+    return routeFactory(homeRoute, null);
   }
 
   @override
@@ -92,7 +94,7 @@ class CustomRouteHandlerBaseAim<T> extends ICustomRouteHandlerAim<T> {
       rootRoute: rootRoute,
     );
 
-    final splashClear = _splashScreenRoute.replaceAll('/', '');
+    final splashClear = splashScreenRoute.replaceAll('/', '');
     final platformClear = platformInitialRoute.route.replaceAll('/', '');
     if (['', splashClear].contains(platformClear)) {
       return appLoaderRoute ?? platformInitialRoute;

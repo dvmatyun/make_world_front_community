@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/route_info_provider_aim.dart';
 import 'package:make_world_front_community/src/navigation/data/router_delegate_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/data/navigator_aim.dart';
@@ -131,62 +130,4 @@ class _MaterialNavigatorAimState<MapString> extends State<MaterialNavigatorAim> 
       ),
     );
   }
-}
-
-/// {@template material_navigator_aim}
-/// _RootAimWidget widget
-/// {@endtemplate}
-class _RootAimWidget extends StatefulWidget {
-  /// {@macro material_navigator_aim}
-  const _RootAimWidget({required this.nestedRoute, required this.child});
-
-  final IAppConfigAim<MapString>? nestedRoute;
-  final Widget? child;
-
-  @override
-  State<_RootAimWidget> createState() => __RootAimWidgetState();
-}
-
-/// State for widget _RootAimWidget
-class __RootAimWidgetState extends State<_RootAimWidget> {
-  /* #region Lifecycle */
-  @override
-  void initState() {
-    super.initState();
-    _pushNestedRoute();
-  }
-
-  Future<void> _pushNestedRoute() async {
-    final route = widget.nestedRoute;
-    if (route == null) {
-      return;
-    }
-    await Future<void>.delayed(const Duration(milliseconds: 1));
-    final navigator = NavigatorAim.of(context);
-    // ignore: cascade_invocations
-    navigator.navigate(context, route);
-  }
-
-  @override
-  void didUpdateWidget(_RootAimWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Widget configuration changed
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // The configuration of InheritedWidgets has changed
-    // Also called after initState but before build
-  }
-
-  @override
-  void dispose() {
-    // Permanent removal of a tree stent
-    super.dispose();
-  }
-  /* #endregion */
-
-  @override
-  Widget build(BuildContext context) => widget.child ?? const Placeholder();
 }

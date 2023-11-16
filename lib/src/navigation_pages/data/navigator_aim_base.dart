@@ -47,7 +47,7 @@ class NavigatorAimBase<T> implements INavigatorBaseAim<T> {
   }
 
   @override
-  void navigate(BuildContext context, IAppConfigAim<T?> route) {
+  Future<void> navigate(BuildContext context, IAppConfigAim<T?> route) async {
     final delegate = config.routerDelegate;
     Router.navigate(context, () {
       delegate.setNewRoutePath(route);
@@ -55,13 +55,13 @@ class NavigatorAimBase<T> implements INavigatorBaseAim<T> {
   }
 
   @override
-  void pushNamed(BuildContext context, String route, {T? args}) {
+  Future<void> pushNamed(BuildContext context, String route, {T? args}) async {
     // ignore: unnecessary_cast
     final routeFactory = config.routeFactory as RouteConfigAimFactory<T>;
     final appConfig = routeFactory(route, args);
     if (appConfig == null) {
       return;
     }
-    navigate(context, appConfig);
+    await navigate(context, appConfig);
   }
 }

@@ -8,8 +8,8 @@ import 'package:make_world_front_community/src/navigation_pages/domain/material_
 abstract class INavigatorBaseAim<T> {
   MaterialAppNavigatorConfigAim<T> get config;
 
-  void navigate(BuildContext context, IAppConfigAim<T> route);
-  void pushNamed(BuildContext context, String route, {T? args});
+  Future<void> navigate(BuildContext context, IAppConfigAim<T> route);
+  Future<void> pushNamed(BuildContext context, String route, {T? args});
 
   void changeState(BuildContext context, T args);
   void addToState(BuildContext context, T args);

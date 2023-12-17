@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:make_world_front_community/design_elements/page/scaffold_aim.dart';
 import 'package:make_world_front_community/src/feature/example_navigation/example_route_handler_base_aim.dart';
 import 'package:make_world_front_community/src/feature/home/presentation/pages/home_page.dart';
+import 'package:make_world_front_community/src/navigation/data/app_config_aim.dart';
 import 'package:make_world_front_community/src/navigation_pages/domain/navigator_aim.dart';
 
 /// {@template login_page}
@@ -33,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
           const Text('Go home here'),
           TextButton(
             onPressed: () async {
+              final navigator = NavigatorAim.of(context);
               setState(() {
                 _isLoading = true;
               });
@@ -41,7 +43,13 @@ class _LoginPageState extends State<LoginPage> {
                 _isLoading = false;
               });
               await Future<void>.delayed(const Duration(milliseconds: 100));
-              unawaited(NavigatorAim.of(context).pushNamed(context, HomePage.routeName));
+              final handler = navigator.config.customRouteHandler;
+              unawaited(
+                navigator.navigate(
+                  context,
+                  handler.initialPlatformRoute ?? const AppConfigMapAim(HomePage.routeName),
+                ),
+              );
             },
             child: _isLoading ? const CircularProgressIndicator.adaptive() : const Text('Go to home'),
           ),
